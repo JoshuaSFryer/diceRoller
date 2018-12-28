@@ -19,11 +19,6 @@ import (
 	"diceRoller/roll"
 )
 
-type diceroll struct {
-	value    int
-	critical int
-}
-
 func main() {
 	seed()
 	reader := bufio.NewReader(os.Stdin)
@@ -51,7 +46,7 @@ func main() {
 			}
 		}
 
-		// Print information about the rolls
+		// Print information about the rolls.
 		average := (float32(sum) / float32(number))
 		fmt.Printf("\nSum: %d\n", sum)
 		fmt.Printf("Average: %.3f\n", average)
@@ -69,9 +64,11 @@ func rollDie(sides int) (roll.Roll, error) {
 		fmt.Println(err)
 		return roll.New(0, 0), err
 	}
+
 	// rand.Intn returns a number between 0 and n-1.
 	// Add 1 to the result to get between 1 and n, as with an n-sided die.
 	r := rand.Intn(sides) + 1
+
 	// Rolling the maximum value on a die is a "critical success".
 	// Rolling a 1 is a "critical failure".
 	// Crit status is encoded as 0 for neutral, +1 for success, -1 for failure.
