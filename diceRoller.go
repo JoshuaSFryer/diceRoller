@@ -2,13 +2,14 @@
 // N represents the number of dice to roll, each of which having M sides.
 // d is used to separate the numbers.
 // For example, 3d6 translates to a roll of 3, 6-sided dice.
+// It then prints out the results of each individual roll, as well as the sum
+// of the rolls, and their average value.
 package main
 
 import (
 	"bufio"
 	"errors"
 	"fmt"
-	//"github.com/daviddengcn/go-colortext"
 	"math/rand"
 	"os"
 	"strconv"
@@ -37,18 +38,21 @@ func main() {
 		number, _ := strconv.Atoi(rollStrings[0])
 		sides, _ := strconv.Atoi(strings.Trim(rollStrings[1], "\n"))
 
-		// Roll the specified dice and print the result.
+		// Roll the specified dice and print the results.
 		fmt.Printf("Rolling %d dice of %d sides. \nResults: ", number, sides)
 		results, _ := rollNDice(number, sides)
 
 		sum := 0
 		for _, r := range results {
+			// Ignore empty slice elements, which initialize to 0.
 			if r.Value != 0 {
 				r.Print()
 				sum += r.Value
 			}
 		}
-		var average float32 = (float32(sum)/float32(number))
+
+		// Print information about the rolls
+		average := (float32(sum) / float32(number))
 		fmt.Printf("\nSum: %d\n", sum)
 		fmt.Printf("Average: %.3f\n", average)
 	}
@@ -68,10 +72,15 @@ func rollDie(sides int) (roll.Roll, error) {
 	// rand.Intn returns a number between 0 and n-1.
 	// Add 1 to the result to get between 1 and n, as with an n-sided die.
 	r := rand.Intn(sides) + 1
+	// Rolling the maximum value on a die is a "critical success".
+	// Rolling a 1 is a "critical failure".
+	// Crit status is encoded as 0 for neutral, +1 for success, -1 for failure.
 	crit := 0
 	if r == sides {
+		// Critical success
 		crit = 1
 	} else if r == 1 {
+		// Critical failure
 		crit = -1
 	}
 	return roll.New(r, crit), nil
@@ -103,7 +112,6 @@ func rollNDice(num int, sides int) ([]roll.Roll, error) {
 	}
 	return rolls, nil
 }
-
 
 // seed seeds the PRNG built into the rand library with the current time since
 // the Unix epoch.
