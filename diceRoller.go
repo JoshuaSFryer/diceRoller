@@ -19,6 +19,12 @@ import (
 	"diceRoller/roll"
 )
 
+const (
+	CritFailure int = iota - 1
+	CritNeutral
+	CritSuccess
+)
+
 func main() {
 	seed()
 	reader := bufio.NewReader(os.Stdin)
@@ -74,14 +80,12 @@ func rollDie(sides int) (roll.Roll, error) {
 
 	// Rolling the maximum value on a die is a "critical success".
 	// Rolling a 1 is a "critical failure".
-	// Crit status is encoded as 0 for neutral, +1 for success, -1 for failure.
-	crit := 0
+	crit := CritNeutral
+
 	if r == sides {
-		// Critical success
-		crit = 1
+		crit = CritSuccess
 	} else if r == 1 {
-		// Critical failure
-		crit = -1
+		crit = CritFailure
 	}
 	return roll.New(r, crit), nil
 }

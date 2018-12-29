@@ -6,7 +6,14 @@ package roll
 import (
 	"fmt"
 	"github.com/daviddengcn/go-colortext"
-	"errors"
+)
+
+// Ugly code duplication, but I don't know a better way to share constants
+// between packages when it's something so small.
+const (
+	CritFailure int = iota - 1
+	CritNeutral
+	CritSuccess
 )
 
 type Roll struct {
@@ -14,16 +21,16 @@ type Roll struct {
 	Critical int
 }
 
-func New(val int, crit int) (Roll, error) {
+func New(val int, crit int) (Roll) {
 	r := Roll{val, crit}
-	return r, nil
+	return r
 }
 
 func (r Roll) Print() {
-	if r.Critical == 1 {
+	if r.Critical ==  CritSuccess{
 		// Critical successes are highlighted green
 		ct.Foreground(ct.Green, true)
-	} else if r.Critical == -1 {
+	} else if r.Critical == CritFailure {
 		// Critical failures are highlighted red
 		ct.Foreground(ct.Red, true)
 	} else {
