@@ -34,22 +34,25 @@ func main() {
 		sides, _ := strconv.Atoi(strings.Trim(rollStrings[1], "\n"))
 
 		// Roll the specified dice and print the results.
-		fmt.Printf("Rolling %d dice of %d sides. \nResults: ", number, sides)
-		results, _ := rollNDice(number, sides)
 
-		sum := 0
-		for _, r := range results {
-			// Ignore empty slice elements, which initialize to 0.
-			if r.Value != 0 {
-				r.Print()
-				sum += r.Value
+		results, err := rollNDice(number, sides)
+
+		if err == nil {
+			fmt.Printf("Rolling %d dice of %d sides.\nResults: ", number, sides)
+			sum := 0
+			for _, r := range results {
+				// Ignore the empty slice elements, which initialize to 0.
+				if r.Value != 0 {
+					r.Print()
+					sum += r.Value
+				}
 			}
-		}
 
-		// Print information about the rolls.
-		average := (float32(sum) / float32(number))
-		fmt.Printf("\nSum: %d\n", sum)
-		fmt.Printf("Average: %.3f\n", average)
+			// Print information about the rolls.
+			average := (float32(sum) / float32(number))
+			fmt.Printf("\nSum: %d\n", sum)
+			fmt.Printf("Average: %.3f\n", average)
+		}
 	}
 }
 
@@ -87,7 +90,8 @@ func rollDie(sides int) (roll.Roll, error) {
 // It returns a slice containing the results of each roll, and any error
 // encountered.
 func rollNDice(num int, sides int) ([]roll.Roll, error) {
-	// Validate input.
+	// Validate num. Validating sides is already handled by rollDie, and we
+	// simply pass that error on if it occurs.
 	if num < 1 {
 		err := errors.New("Must roll at least 1 die")
 		fmt.Println(err)

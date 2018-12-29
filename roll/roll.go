@@ -6,6 +6,7 @@ package roll
 import (
 	"fmt"
 	"github.com/daviddengcn/go-colortext"
+	"errors"
 )
 
 type Roll struct {
@@ -13,9 +14,9 @@ type Roll struct {
 	Critical int
 }
 
-func New(val int, crit int) Roll {
+func New(val int, crit int) (Roll, error) {
 	r := Roll{val, crit}
-	return r
+	return r, nil
 }
 
 func (r Roll) Print() {
