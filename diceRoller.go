@@ -28,10 +28,10 @@ const (
 func main() {
 	seed()
 	reader := bufio.NewReader(os.Stdin)
-
+	
 	for {
 		// Prompt the user and save the input.
-		fmt.Print("Enter a dice roll: ")
+		fmt.Print("Enter a dice roll of the format XdY: ")
 		text, _ := reader.ReadString('\n')
 
 		// Split the input and separate the two numbers, storing them in vars.
